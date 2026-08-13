@@ -4,67 +4,50 @@ import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import BottomNav from "../components/BottomNav";
 
-const statusColors = { submitted: "#B33B24", triaged: "#4B3F8F", logged: "#CC8400", recovering: "#00796B", resolved: "#4CAF50" };
-const riskColors = { high: "#22d3c9", low: "#CC8400", pending: "#757575" };
-const statusFilters = ["all", "submitted", "triaged", "logged", "recovering", "resolved"];
+const statusMeta = {
+  pending: { label: "Awaiting review", color: "#CC8400" },
+  approved: { label: "Verified", color: "#4B3F8F" },
+  rejected: { label: "Rejected", color: "#B33B24" },
+};
 
 export default function Dashboard() {
-  const { user, role } = useAuth();
+  const { user, profile } = useAuth();
   const [reports, setReports] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
-
-  const isElevated = role === "government" || role === "academia";
 
   useEffect(() => {
     if (!user) return;
-    const q = isElevated
-      ? query(collection(db, "reports"), orderBy("timestamp", "desc"))
-      : query(collection(db, "reports"), where("submittedBy", "==", user.uid), orderBy("timestamp", "desc"));
+    const q = query(collection(db, "reports"), where("submittedBy", "==", user.uid), orderBy("timestamp", "desc"));
     const unsub = onSnapshot(q, (snap) => setReports(snap.docs.map((d) => ({ id: d.id, ...d.data() }))));
     return unsub;
-  }, [user, isElevated]);
-
-  const filtered = reports.filter((r) => {
-    const matchFilter = filter === "all" || r.status === filter;
-    const term = search.toLowerCase();
-    const matchSearch = !term || [r.description, r.location, r.category].some((f) => (f || "").toLowerCase().includes(term));
-    return matchFilter && matchSearch;
-  });
+  }, [user]);
 
   return (
     <div className="page-wrap">
-      <div className="page-title">Dashboard</div>
-      <p className="subtitle">{isElevated ? "All reports across the city" : "Your reports"}</p>
-      <input className="field" placeholder="Search description, location, category" value={search} onChange={(e) => setSearch(e.target.value)} />
-      <div className="chip-row">
-        {statusFilters.map((s) => (
-          <div key={s} className={"chip" + (filter === s ? " active" : "")} onClick={() => setFilter(s)}>
-            {s[0].toUpperCase() + s.slice(1)}
-          </div>
-        ))}
-      </div>
+      <div className="page-title">Hi, {profile?.name || "there"}</div>
+      <p className="subtitle">Your reports and their status</p>
 
-      {filtered.length === 0 ? (
-        <div className="empty-state">{reports.length === 0 ? "No reports yet" : "No reports match your filters"}</div>
+      {reports.length === 0 ? (
+        <div className="empty-state">No reports yet — tap Submit to report something.</div>
       ) : (
-        filtered.map((r) => (
-          <div key={r.id} className="card">
-            <div className="card-top">
-              <span className="card-title">{r.category || "uncategorized"}</span>
-              <span className="badge" style={{ background: statusColors[r.status] || "#757575" }}>{r.status}</span>
+        reports.map((r) => {
+          const meta = r.noticePublished
+            ? { label: "Resolved — notice published", color: "#4ade80" }
+            : r.solved
+            ? { label: "Marked solved, awaiting government notice", color: "#22d3c9" }
+            : statusMeta[r.verificationStatus] || statusMeta.pending;
+          return (
+            <div key={r.id} className="card">
+              <div className="card-top">
+                <span className="card-title">{r.category}</span>
+                <span className="badge" style={{ background: meta.color }}>{meta.label}</span>
+              </div>
+              <div className="card-desc">{r.description}</div>
+              <div className="card-loc">{r.location}</div>
             </div>
-            <div className="card-desc">{r.description}</div>
-            <div className="card-loc">{r.location}</div>
-            {r.riskLevel && r.riskLevel !== "pending" && (
-              <span className="risk-badge" style={{ background: (riskColors[r.riskLevel] || "#757575") + "26", color: riskColors[r.riskLevel] }}>
-                {r.riskLevel} risk
-              </span>
-            )}
-          </div>
-        ))
+          );
+        })
       )}
-      <BottomNav />
+      <BottomNav role="citizen" />
     </div>
   );
 }
