@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
+import { friendlyAuthError } from "../utils/authErrors";
 
 export default function GovLogin() {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function GovLogin() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      setError(err.message);
+      setError(friendlyAuthError(err));
     }
   };
 

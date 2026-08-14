@@ -16,11 +16,11 @@ export default function Notifications() {
 
   return (
     <div className="page-wrap">
-      <div className="page-title">Notices</div>
+      <div className="page-title">Announcements</div>
       <p className="subtitle">Official updates from Government</p>
 
       {items.length === 0 ? (
-        <div className="empty-state">No notices yet.</div>
+      <div className="empty-state">No announcements yet.</div>
       ) : (
         items.map((n) => (
           <div key={n.id} className="card">

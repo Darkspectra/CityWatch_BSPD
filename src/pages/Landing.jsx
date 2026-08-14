@@ -1,10 +1,30 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+const phrases = [
+  "Reported by many.",
+  "Verified by experts.",
+  "Resolved for all.",
+];
+
 export default function Landing() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % phrases.length);
+    }, 2400);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="page-wrap">
       <div className="brand">CityWatch</div>
       <p className="subtitle">Every signal seen, every answer verified.</p>
+
+      <div className="hero-motto">
+        <span key={index} className="hero-motto-text">{phrases[index]}</span>
+      </div>
 
       <div className="role-grid">
         <Link to="/citizen/login" className="role-tile">

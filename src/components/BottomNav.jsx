@@ -4,17 +4,17 @@ const tabsByRole = {
   citizen: [
     { to: "/dashboard", label: "My Reports" },
     { to: "/submit", label: "Submit" },
-    { to: "/notifications", label: "Notices" },
+    { to: "/notifications", label: "Announcements" },
     { to: "/profile", label: "Profile" },
   ],
   industrial: [
     { to: "/verify", label: "Verify" },
-    { to: "/notifications", label: "Notices" },
+    { to: "/notifications", label: "Announcements" },
     { to: "/profile", label: "Profile" },
   ],
   academia: [
     { to: "/solve", label: "Solve" },
-    { to: "/notifications", label: "Notices" },
+    { to: "/notifications", label: "Announcements" },
     { to: "/profile", label: "Profile" },
   ],
   government: [

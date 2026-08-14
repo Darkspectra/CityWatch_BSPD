@@ -237,7 +237,6 @@ select.field option { background: #0d2b21; color: var(--text); }
 
 .loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; color: var(--text-dim); }
 
-/* --- Role selection tiles (Landing page) --- */
 .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
 .role-tile {
   background: var(--glass);
@@ -263,3 +262,127 @@ select.field option { background: #0d2b21; color: var(--text); }
 }
 .role-tile-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
 .role-tile-desc { font-size: 12px; color: var(--text-dim); }
+
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #16543f, #0f3d2e);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  color: #eafff2;
+  padding: 14px 22px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  z-index: 999;
+  animation: toastIn 0.3s ease;
+}
+.toast-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--success); color: #0a1f14;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900; flex-shrink: 0;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, -12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.dataset-table {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+}
+
+
+.hero-motto {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+.hero-motto-text {
+  font-size: 26px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: heroFade 0.5s ease;
+}
+@keyframes heroFade {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+
+
+
+
+
+
+
+
+.dataset-header {
+  display: grid;
+  grid-template-columns: 1fr 1.8fr 1fr 1fr 0.8fr 0.9fr 0.8fr;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+}
+
+.card-exit {
+  animation: cardExit 0.28s ease forwards;
+  pointer-events: none;
+}
+@keyframes cardExit {
+  to { opacity: 0; transform: translateX(30px) scale(0.96); max-height: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; }
+}
+
+
+
+
+.dataset-row {
+  display: grid;
+  grid-template-columns: 1fr 1.8fr 1fr 1fr 0.8fr 0.9fr 0.8fr;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  transition: background 0.15s ease;
+}
+.dataset-row:last-child { border-bottom: none; }
+.dataset-row:hover { background: rgba(34, 211, 168, 0.05); }
+
+.dataset-cell { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dataset-category { font-weight: 700; text-transform: capitalize; }
+.dataset-desc { white-space: normal; color: #c8ded4; }
+.dataset-dim { color: var(--text-dim); }
+
+@media (max-width: 700px) {
+  .dataset-header { display: none; }
+  .dataset-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 16px;
+  }
+  .dataset-cell { white-space: normal; }
+}

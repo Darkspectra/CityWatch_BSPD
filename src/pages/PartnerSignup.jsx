@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import { useAuth } from "../context/AuthContext";
 
 export default function PartnerSignup() {
   const [name, setName] = useState("");
@@ -11,6 +12,13 @@ export default function PartnerSignup() {
   const [role, setRole] = useState("industrial");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/partner/redirect", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +26,7 @@ export default function PartnerSignup() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", cred.user.uid), { name, email, role });
-      navigate(role === "industrial" ? "/verify" : "/solve");
+      // navigation happens automatically via the useEffect above once AuthContext updates
     } catch (err) {
       setError(err.message);
     }

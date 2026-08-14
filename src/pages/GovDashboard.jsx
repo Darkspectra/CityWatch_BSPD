@@ -33,7 +33,7 @@ export default function GovDashboard() {
   const publishResolution = async (report) => {
   await addDoc(collection(db, "notifications"), { /* ...unchanged... */ });
   await updateDoc(doc(db, "reports", report.id), { noticePublished: true });
-  showToast("Resolution notice published");
+  showToast("Resolution announcement published");
   };
 
   const publishAlert = async (e) => {
@@ -46,7 +46,7 @@ export default function GovDashboard() {
       createdAt: Timestamp.now()
     });
     setAlertTitle(""); setAlertMessage("");
-    showToast("Alert published to all users");
+    showToast("Announcement published to all users");
     setTimeout(() => setPosted(""), 3000);
   };
 
@@ -74,40 +74,38 @@ export default function GovDashboard() {
             <div className="card-title">{r.category}</div>
             <div className="card-desc">{r.description}</div>
             <div className="card-loc">{r.location}</div>
-            <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => publishResolution(r)}>Publish Resolution Notice</button>
+            <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={() => publishResolution(r)}>Publish Resolution Announcement</button>
           </div>
         ))
       )}
 
       <div className="page-title" style={{ fontSize: 17, marginTop: 28, marginBottom: 8 }}>
-        All Citizen Reports
+  All Citizen Reports
+</div>
+{allReports.length === 0 ? (
+  <div className="empty-state">No reports submitted yet.</div>
+) : (
+  allReports.map((r) => {
+    const statusLabel = r.noticePublished ? "Resolved"
+      : r.solved ? "Solved, awaiting notice"
+      : r.verificationStatus === "approved" ? "Verified"
+      : r.verificationStatus === "rejected" ? "Rejected"
+      : "Pending review";
+    const statusColor = r.noticePublished ? "#4ade80"
+      : r.solved ? "#22d3c9"
+      : r.verificationStatus === "approved" ? "#4B3F8F"
+      : r.verificationStatus === "rejected" ? "#B33B24"
+      : "#CC8400";
+    return (
+      <div key={r.id} className="card" style={{ padding: 14 }}>
+        <div className="card-top" style={{ marginBottom: 0 }}>
+          <span className="card-title" style={{ fontSize: 13 }}>{r.category} — {r.location}</span>
+          <span className="badge" style={{ background: statusColor }}>{statusLabel}</span>
+        </div>
       </div>
-      {allReports.length === 0 ? (
-        <div className="empty-state">No reports submitted yet.</div>
-      ) : (
-        allReports.map((r) => {
-          const statusLabel = r.noticePublished ? "Resolved"
-            : r.solved ? "Solved, awaiting notice"
-            : r.verificationStatus === "approved" ? "Verified"
-            : r.verificationStatus === "rejected" ? "Rejected"
-            : "Pending review";
-          const statusColor = r.noticePublished ? "#4ade80"
-            : r.solved ? "#22d3c9"
-            : r.verificationStatus === "approved" ? "#4B3F8F"
-            : r.verificationStatus === "rejected" ? "#B33B24"
-            : "#CC8400";
-          return (
-            <div key={r.id} className="card">
-              <div className="card-top">
-                <span className="card-title">{r.category}</span>
-                <span className="badge" style={{ background: statusColor }}>{statusLabel}</span>
-              </div>
-              <div className="card-desc">{r.description}</div>
-              <div className="card-loc">{r.location}</div>
-            </div>
-          );
-        })
-      )}
+    );
+  })
+)}
 
       <BottomNav role="government" />
     </div>

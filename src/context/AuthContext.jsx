@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 const AuthContext = createContext();
@@ -12,21 +12,41 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
+    let unsubProfile = null;
+
+    const unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      if (unsubProfile) { unsubProfile(); unsubProfile = null; }
+
       if (firebaseUser) {
-        const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-        if (snap.exists()) {
-          setProfile(snap.data());
-          setRole(snap.data().role || "");
-        }
+        setUser(firebaseUser);
+        // Stay loading until the FIRST snapshot of the user doc actually arrives
+        unsubProfile = onSnapshot(doc(db, "users", firebaseUser.uid), (snap) => {
+          if (snap.exists()) {
+            setProfile(snap.data());
+            setRole(snap.data().role || "");
+          } else {
+            setProfile(null);
+            setRole("");
+          }
+          setLoading(false);
+        }, () => {
+          // permission error or similar — don't get stuck loading forever
+          setProfile(null);
+          setRole("");
+          setLoading(false);
+        });
       } else {
+        setUser(null);
         setProfile(null);
         setRole("");
+        setLoading(false);
       }
-      setLoading(false);
     });
-    return unsubscribe;
+
+    return () => {
+      unsubAuth();
+      if (unsubProfile) unsubProfile();
+    };
   }, []);
 
   return (
