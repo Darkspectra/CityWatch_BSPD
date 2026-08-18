@@ -3,7 +3,10 @@ import { collection, query, where, orderBy, onSnapshot } from "firebase/firestor
 import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import BottomNav from "../components/BottomNav";
+<<<<<<< HEAD
 import PixelFooter from "../components/PixelFooter";
+=======
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
 
 const statusMeta = {
   pending: { label: "Awaiting review", color: "#CC8400" },
@@ -49,7 +52,10 @@ export default function Dashboard() {
         })
       )}
       <BottomNav role="citizen" />
+<<<<<<< HEAD
       <PixelFooter />
+=======
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
     </div>
   );
 }

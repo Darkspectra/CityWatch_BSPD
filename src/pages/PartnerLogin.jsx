@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+<<<<<<< HEAD
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
@@ -7,6 +8,12 @@ import { useToast } from "../context/ToastContext";
 import { friendlyAuthError } from "../utils/authErrors";
 import PasswordField from "../components/PasswordField";
 import RoleBadge from "../components/RoleBadge";
+=======
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
+import { useAuth } from "../context/AuthContext";
+import { friendlyAuthError } from "../utils/authErrors";
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
 
 export default function PartnerLogin() {
   const [email, setEmail] = useState("");
@@ -15,7 +22,10 @@ export default function PartnerLogin() {
   const [notRegistered, setNotRegistered] = useState(false);
   const navigate = useNavigate();
   const { user, role, loading } = useAuth();
+<<<<<<< HEAD
   const { showToast } = useToast();
+=======
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
 
   useEffect(() => {
     if (!loading && user) {
@@ -40,6 +50,7 @@ export default function PartnerLogin() {
     }
   };
 
+<<<<<<< HEAD
   const handleForgotPassword = async () => {
     if (!email) {
       setError("Enter your email above first, then tap \"Forgot password?\"");
@@ -66,6 +77,16 @@ export default function PartnerLogin() {
         </div>
         <PasswordField value={password} onChange={(e) => setPassword(e.target.value)} />
         <button type="button" className="forgot-password" onClick={handleForgotPassword}>Forgot password?</button>
+=======
+  return (
+    <div className="page-wrap">
+      <div className="brand">CityWatch</div>
+      <p className="subtitle">Industrial / Academia sign in</p>
+      {error && <p className="error-text">{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input className="field" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input className="field" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
         <button className="btn btn-primary" type="submit">Sign In</button>
       </form>
       {notRegistered && (
@@ -74,7 +95,11 @@ export default function PartnerLogin() {
         </Link>
       )}
       <Link className="link-btn" to="/partner/signup">Don't have an account? Sign up</Link>
+<<<<<<< HEAD
       <Link className="text-link" to="/">← Back</Link>
+=======
+      <Link className="link-btn" to="/" style={{ marginTop: 6, opacity: 0.7 }}>← Back</Link>
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
     </div>
   );
 }

@@ -4,8 +4,11 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
+<<<<<<< HEAD
 import PasswordField from "../components/PasswordField";
 import RoleBadge from "../components/RoleBadge";
+=======
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
 
 export default function PartnerSignup() {
   const [name, setName] = useState("");
@@ -37,6 +40,7 @@ export default function PartnerSignup() {
   return (
     <div className="page-wrap">
       <div className="brand">CityWatch</div>
+<<<<<<< HEAD
       <RoleBadge role="partner" label="Industrial / Academia sign up" />
       {error && <p className="error-text">{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -65,6 +69,21 @@ export default function PartnerSignup() {
       </form>
       <Link className="link-btn" to="/partner/login">Already have an account? Sign in</Link>
       <Link className="text-link" to="/">← Back</Link>
+=======
+      <p className="subtitle">Industrial / Academia sign up</p>
+      {error && <p className="error-text">{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input className="field" placeholder="Organization / Name" value={name} onChange={(e) => setName(e.target.value)} required />
+        <input className="field" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input className="field" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <select className="field" value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="industrial">Industrial</option>
+          <option value="academia">Academia / Researcher</option>
+        </select>
+        <button className="btn btn-primary" type="submit">Sign Up</button>
+      </form>
+      <Link className="link-btn" to="/partner/login">Already have an account? Sign in</Link>
+>>>>>>> 36f17f78c5fce32c9eddd775c3ebd3c8642d91a9
     </div>
   );
 }
