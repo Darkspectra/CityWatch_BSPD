@@ -18,7 +18,7 @@ export default function Signup() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", cred.user.uid), { name, email, role });
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     }
