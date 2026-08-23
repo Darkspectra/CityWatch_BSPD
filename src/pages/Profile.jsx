@@ -23,7 +23,7 @@ export default function Profile() {
       <div className="profile-row"><div className="profile-label">Email</div><div className="profile-value">{profile?.email || "—"}</div></div>
       <div className="profile-row"><div className="profile-label">Role</div><div className="profile-value">{profile?.role || "—"}</div></div>
       <button className="btn btn-secondary" onClick={handleSignOut}>Sign Out</button>
-      <BottomNav />
+      <BottomNav role={profile?.role} />
     </div>
   );
 }

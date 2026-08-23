@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import "./LandingPage.css";
+import ParticleNetwork from "../components/ParticleNetwork";
+import Globe from "../components/Globe";
 
-/* ── Dashboard mockup data (mirrors real Dashboard status/risk colors) ── */
 const mockReports = [
   { cat: "Chemical Spill", loc: "Sector 4 — Riverside", status: "submitted", statusColor: "#B33B24", risk: "high", riskColor: "#22d3c9" },
   { cat: "Water Quality", loc: "District 7 — Main Pipeline", status: "triaged", statusColor: "#4B3F8F", risk: "low", riskColor: "#CC8400" },
@@ -14,18 +15,19 @@ export default function LandingPage() {
     <div className="lp">
       {/* ── Nav ── */}
       <nav className="lp-nav" id="lp-top">
-        <span className="lp-nav-brand">CityWatch</span>
-        <div className="lp-nav-links">
-          <a href="#how-it-works" className="lp-nav-hide-mobile">How It Works</a>
-          <a href="#about" className="lp-nav-hide-mobile">About Us</a>
-          <a href="#resilient-city" className="lp-nav-hide-mobile">A Resilient City</a>
-          <Link to="/login" className="lp-nav-login">Log In</Link>
-          <Link to="/signup" className="lp-nav-cta">Get Started</Link>
-        </div>
+       <span className="lp-nav-brand">CityWatch</span>
+       <div className="lp-nav-links">
+        <a href="#how-it-works" className="lp-nav-hide-mobile">How It Works</a>
+        <a href="#about" className="lp-nav-hide-mobile">About Us</a>
+        <a href="#resilient-city" className="lp-nav-hide-mobile">A Resilient City</a>
+        <Link to="/start" className="lp-nav-login">Log In</Link>
+        <span className="lp-nav-logo">BSPD</span>
+      </div>
       </nav>
 
       {/* ── Hero ── */}
       <section className="lp-hero" id="hero">
+        <div className="lp-panel-particles"><ParticleNetwork /></div>
         <div className="lp-hero-inner">
           <div className="lp-hero-text">
             <h1>City-Scale Environmental Intelligence</h1>
@@ -35,7 +37,7 @@ export default function LandingPage() {
               — with full transparency and a resilient-city framework built in.
             </p>
             <div className="lp-hero-actions">
-              <Link to="/signup" className="lp-btn-primary">
+              <Link to="/start" className="lp-btn-primary">
                 Get Started
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
@@ -43,7 +45,6 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Dashboard mockup — CSS-rendered, not a static image */}
           <div className="lp-mockup">
             <div className="lp-mockup-window">
               <div className="lp-mockup-bar">
@@ -80,23 +81,23 @@ export default function LandingPage() {
       <section className="lp-roles" id="roles">
         <h2>Choose Your Role</h2>
         <div className="lp-roles-grid">
-          <Link to="/signup?role=citizen" className="lp-role-card">
+          <Link to="/citizen/signup" className="lp-role-card">
             <span className="lp-role-icon">🏠</span>
             <h3>Citizens</h3>
             <p>Report environmental issues in your neighborhood — chemical spills, air quality, water contamination.</p>
             <span className="lp-role-cta">Report an Issue →</span>
           </Link>
-          <Link to="/signup?role=industrial" className="lp-role-card">
+          <Link to="/partner/signup" className="lp-role-card">
             <span className="lp-role-icon">🏭</span>
             <h3>Industry & Reviewers</h3>
             <p>Verify citizen reports, run sensor diagnostics, and triage incidents by risk level.</p>
             <span className="lp-role-cta">Start Verifying →</span>
           </Link>
-          <Link to="/signup?role=government" className="lp-role-card">
+          <Link to="/gov/login" className="lp-role-card">
             <span className="lp-role-icon">🏛️</span>
             <h3>Government Partners</h3>
             <p>Publish official resolutions, track city-wide trends, and close the loop with the public.</p>
-            <span className="lp-role-cta">Join as Partner →</span>
+            <span className="lp-role-cta">Sign In as Partner →</span>
           </Link>
         </div>
       </section>
@@ -122,12 +123,12 @@ export default function LandingPage() {
             <div className="lp-step">
               <span className="lp-step-num">3</span>
               <h3>Resolve</h3>
-              <p>Government agencies coordinate remediation, update statuses, and deploy response teams.</p>
+              <p>Academia tracks the verified issue until it's fixed, then flags it as solved.</p>
             </div>
             <div className="lp-step">
               <span className="lp-step-num">4</span>
               <h3>Announce</h3>
-              <p>Resolutions are published transparently so citizens can track outcomes and recovery progress.</p>
+              <p>Government publishes one clear, trusted notice the whole city can see.</p>
             </div>
           </div>
         </div>
@@ -171,14 +172,22 @@ export default function LandingPage() {
 
       {/* ── A Resilient City, Modeled ── */}
       <section className="lp-resilient" id="resilient-city">
+        <div className="lp-panel-particles"><ParticleNetwork /></div>
         <div className="lp-resilient-inner">
-          <p className="lp-section-label">Resilience Framework</p>
-          <h2 className="lp-section-title">A Resilient City, Modeled</h2>
-          <p className="lp-section-body">
-            Our platform models urban resilience across environmental, social, and
-            infrastructural dimensions — turning reactive crisis management into
-            proactive city planning.
-          </p>
+          <div className="lp-resilient-top">
+            <div>
+              <p className="lp-section-label">Resilience Framework</p>
+              <h2 className="lp-section-title">A Resilient City, Modeled</h2>
+              <p className="lp-section-body">
+                Our platform models urban resilience across environmental, social, and
+                infrastructural dimensions — turning reactive crisis management into
+                proactive city planning.
+              </p>
+            </div>
+            <div className="lp-resilient-globe">
+              <Globe size={190} />
+            </div>
+          </div>
           <div className="lp-resilient-grid">
             <div className="lp-resilient-card">
               <h3>Environmental Monitoring</h3>
@@ -206,8 +215,8 @@ export default function LandingPage() {
         <div className="lp-footer-links">
           <a href="#how-it-works">How It Works</a>
           <a href="#about">About</a>
-          <Link to="/login">Log In</Link>
-          <Link to="/signup">Sign Up</Link>
+          <Link to="/start">Log In</Link>
+          <Link to="/start">Sign Up</Link>
         </div>
       </footer>
     </div>
