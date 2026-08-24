@@ -17,6 +17,7 @@ import Solve from "./pages/Solve";
 import GovDashboard from "./pages/GovDashboard";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
+import Statistics from "./pages/Statistics";
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/submit" element={<RoleRoute allowed={["citizen"]}><Submit /></RoleRoute>} />
             <Route path="/verify" element={<RoleRoute allowed={["industrial"]}><Verify /></RoleRoute>} />
             <Route path="/solve" element={<RoleRoute allowed={["academia"]}><Solve /></RoleRoute>} />
+            <Route path="/statistics" element={<RoleRoute allowed={["academia"]}><Statistics /></RoleRoute>} />
             <Route path="/gov" element={<RoleRoute allowed={["government"]}><GovDashboard /></RoleRoute>} />
             <Route path="/notifications" element={<RoleRoute allowed={["citizen", "industrial", "academia"]}><Notifications /></RoleRoute>} />
             <Route path="/profile" element={<RoleRoute allowed={["citizen", "industrial", "academia", "government"]}><Profile /></RoleRoute>} />

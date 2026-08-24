@@ -13,9 +13,10 @@ const tabsByRole = {
     { to: "/profile", label: "Profile" },
   ],
   academia: [
-    { to: "/solve", label: "Solve" },
-    { to: "/notifications", label: "Announcements" },
-    { to: "/profile", label: "Profile" },
+  { to: "/solve", label: "Solve" },
+  { to: "/statistics", label: "Statistics" },
+  { to: "/notifications", label: "Announcements" },
+  { to: "/profile", label: "Profile" },
   ],
   government: [
     { to: "/gov", label: "Dashboard" },

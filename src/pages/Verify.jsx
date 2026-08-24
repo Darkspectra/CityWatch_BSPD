@@ -3,11 +3,13 @@ import { collection, query, where, orderBy, onSnapshot, doc, updateDoc } from "f
 import { db } from "../firebase";
 import { useToast } from "../context/ToastContext";
 import BottomNav from "../components/BottomNav";
+import LocationPicker from "../components/LocationPicker";
 
 export default function Verify() {
   const [reports, setReports] = useState([]);
   const [riskChoice, setRiskChoice] = useState({});
-  const [removing, setRemoving] = useState({});
+  const [mapOpenFor, setMapOpenFor] = useState(null);
+  const [confirmedLocation, setConfirmedLocation] = useState({});
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -17,32 +19,54 @@ export default function Verify() {
   }, []);
 
   const handleDecision = async (id, decision) => {
-    setRemoving((prev) => ({ ...prev, [id]: true }));
     const riskLevel = riskChoice[id] || "medium";
-
-    setTimeout(async () => {
-      await updateDoc(doc(db, "reports", id), {
-        verificationStatus: decision,
-        status: decision === "approved" ? "verified" : "rejected",
-        riskLevel: decision === "approved" ? riskLevel : null,
-      });
-      showToast(decision === "approved" ? "Report approved" : "Report rejected");
-    }, 280);
+    const loc = confirmedLocation[id];
+    await updateDoc(doc(db, "reports", id), {
+      verificationStatus: decision,
+      status: decision === "approved" ? "verified" : "rejected",
+      riskLevel: decision === "approved" ? riskLevel : null,
+      ...(loc ? { verifiedLat: loc.lat, verifiedLng: loc.lon, verifiedLocationName: loc.name } : {}),
+    });
+    showToast(decision === "approved" ? "Report approved" : "Report rejected");
   };
 
   return (
     <div className="page-wrap">
       <div className="page-title">Reports to Verify</div>
-      <p className="subtitle">Confirm accuracy and assign a risk level</p>
+      <p className="subtitle">Confirm accuracy, location, and assign a risk level</p>
 
       {reports.length === 0 ? (
         <div className="empty-state">Nothing waiting for review right now.</div>
       ) : (
         reports.map((r) => (
-          <div key={r.id} className={"card" + (removing[r.id] ? " card-exit" : "")}>
+          <div key={r.id} className="card">
             <div className="card-title">{r.category}</div>
             <div className="card-desc">{r.description}</div>
             <div className="card-loc">{r.location}</div>
+            {r.imageBase64 && <img src={r.imageBase64} alt="" className="card-photo" />}
+            
+            {confirmedLocation[r.id] && (
+              <div className="location-confirmed-tag">📍 {confirmedLocation[r.id].name}</div>
+            )}
+
+            <button
+              type="button"
+              className="btn btn-secondary"
+              style={{ marginTop: 10 }}
+              onClick={() => setMapOpenFor(mapOpenFor === r.id ? null : r.id)}
+            >
+              {mapOpenFor === r.id ? "Close Map" : "Verify Location on Map"}
+            </button>
+
+            {mapOpenFor === r.id && (
+              <LocationPicker
+                initialQuery={r.location}
+                onConfirm={(loc) => {
+                  setConfirmedLocation((prev) => ({ ...prev, [r.id]: loc }));
+                  setMapOpenFor(null);
+                }}
+              />
+            )}
 
             <div className="chip-row" style={{ marginTop: 12, marginBottom: 4 }}>
               {["low", "medium", "high"].map((level) => (

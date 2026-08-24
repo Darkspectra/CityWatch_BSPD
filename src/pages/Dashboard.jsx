@@ -39,6 +39,7 @@ export default function Dashboard() {
           return (
             <div key={r.id} className="card">
               <div className="card-top">
+                {r.imageBase64 && <img src={r.imageBase64} alt="" className="card-photo" />}
                 <span className="card-title">{r.category}</span>
                 <span className="badge" style={{ background: meta.color }}>{meta.label}</span>
               </div>
