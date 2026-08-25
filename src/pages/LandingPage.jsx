@@ -210,14 +210,19 @@ export default function LandingPage() {
       </section>
 
       {/* ── Footer ── */}
+        {/* ── Footer ── */}
       <footer className="lp-footer">
         <span className="lp-footer-brand">CityWatch · BSPD</span>
-        <div className="lp-footer-links">
-          <a href="#how-it-works">How It Works</a>
-          <a href="#about">About</a>
-          <Link to="/start">Log In</Link>
-          <Link to="/start">Sign Up</Link>
+        <div className="lp-footer-names">
+          <span>Nodoka Kakoi</span>
+          <span className="lp-footer-sep">|</span>
+          <span>Daniel Azarya Tafuama</span>
+          <span className="lp-footer-sep">|</span>
+          <span>Patricia Aira Dy Herrera</span>
+          <span className="lp-footer-sep">|</span>
+          <span>Farhan Tanvir Ahmed</span>
         </div>
+        <span className="lp-footer-tag">EBA Minamata — 2026</span>
       </footer>
     </div>
   );

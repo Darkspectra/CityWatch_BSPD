@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, query, where, orderBy, onSnapshot, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import HomeButton from "../components/HomeButton";
 import BottomNav from "../components/BottomNav";
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
@@ -64,6 +65,7 @@ export default function Statistics() {
 
   return (
     <div className="page-wrap" style={{ maxWidth: 900 }}>
+      <HomeButton />
       <div className="page-title">Statistics</div>
       <p className="subtitle">Overview of all verified reports</p>
 

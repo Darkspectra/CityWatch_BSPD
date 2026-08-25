@@ -18,6 +18,8 @@ import GovDashboard from "./pages/GovDashboard";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Statistics from "./pages/Statistics";
+import AuthAction from "./pages/AuthAction";
+import VerifyEmailGate from "./pages/VerifyEmailGate";
 
 export default function App() {
   return (
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="/partner/signup" element={<PartnerSignup />} />
             <Route path="/partner/redirect" element={<PartnerRedirect />} />
             <Route path="/gov/login" element={<GovLogin />} />
+            <Route path="/auth-action" element={<AuthAction />} />
+            <Route path="/verify-email" element={<VerifyEmailGate />} />
 
             <Route path="/dashboard" element={<RoleRoute allowed={["citizen"]}><Dashboard /></RoleRoute>} />
             <Route path="/submit" element={<RoleRoute allowed={["citizen"]}><Submit /></RoleRoute>} />

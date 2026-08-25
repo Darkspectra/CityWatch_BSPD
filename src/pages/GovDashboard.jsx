@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import BottomNav from "../components/BottomNav";
 import { useToast } from "../context/ToastContext";
 import { collection as fbCollection } from "firebase/firestore";
+import HomeButton from "../components/HomeButton";
 
 
 export default function GovDashboard() {
@@ -52,6 +53,7 @@ export default function GovDashboard() {
 
   return (
     <div className="page-wrap">
+      <HomeButton />
       <div className="page-title">Government Dashboard</div>
       <p className="subtitle">Publish alerts and confirm resolutions</p>
 

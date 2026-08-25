@@ -3,6 +3,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import BottomNav from "../components/BottomNav";
+import HomeButton from "../components/HomeButton";
 
 export default function Profile() {
   const { profile } = useAuth();
@@ -17,6 +18,7 @@ export default function Profile() {
 
   return (
     <div className="page-wrap">
+      <HomeButton />
       <div className="avatar">{initial}</div>
       <div className="page-title" style={{ textAlign: "center", marginBottom: 24 }}>Profile</div>
       <div className="profile-row"><div className="profile-label">Name</div><div className="profile-value">{profile?.name || "—"}</div></div>

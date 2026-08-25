@@ -3,6 +3,7 @@ import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import BottomNav from "../components/BottomNav";
+import HomeButton from "../components/HomeButton";
 
 export default function Notifications() {
   const { role } = useAuth();
@@ -16,6 +17,7 @@ export default function Notifications() {
 
   return (
     <div className="page-wrap">
+      <HomeButton />
       <div className="page-title">Announcements</div>
       <p className="subtitle">Official updates from Government</p>
 

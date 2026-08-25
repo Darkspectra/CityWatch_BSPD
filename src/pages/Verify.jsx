@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import { useToast } from "../context/ToastContext";
 import BottomNav from "../components/BottomNav";
 import LocationPicker from "../components/LocationPicker";
+import HomeButton from "../components/HomeButton";
 
 export default function Verify() {
   const [reports, setReports] = useState([]);
@@ -32,8 +33,10 @@ export default function Verify() {
 
   return (
     <div className="page-wrap">
+      <HomeButton />
       <div className="page-title">Reports to Verify</div>
       <p className="subtitle">Confirm accuracy, location, and assign a risk level</p>
+
 
       {reports.length === 0 ? (
         <div className="empty-state">Nothing waiting for review right now.</div>

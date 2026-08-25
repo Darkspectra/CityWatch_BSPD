@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import BottomNav from "../components/BottomNav";
 import { compressImage } from "../utils/imageCompress";
+import HomeButton from "../components/HomeButton";
 
 export default function Submit() {
   const { user } = useAuth();
@@ -68,6 +69,7 @@ export default function Submit() {
 
   return (
     <div className="page-wrap">
+      <HomeButton />
       <div className="page-title">Submit a Report</div>
       <p className="subtitle">What did you see?</p>
       {error && <p className="error-text">{error}</p>}

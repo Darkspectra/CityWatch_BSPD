@@ -6,6 +6,7 @@ import { auth, db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import PasswordField from "../components/PasswordField";
 import RoleBadge from "../components/RoleBadge";
+import { sendEmailVerification } from "firebase/auth";
 
 export default function CitizenSignup() {
   const [name, setName] = useState("");
@@ -27,6 +28,9 @@ export default function CitizenSignup() {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", cred.user.uid), { name, email, role: "citizen" });
+      await sendEmailVerification(cred.user, {
+      url: "https://task-management-d6dee.web.app/auth-action",
+      });
     } catch (err) {
       setError(err.message);
     }

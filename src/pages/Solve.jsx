@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import { useToast } from "../context/ToastContext";
 import BottomNav from "../components/BottomNav";
 import LocationMapView from "../components/LocationMapView";
+import HomeButton from "../components/HomeButton";
 
 const riskColors = { high: "#ff6b7a", medium: "#CC8400", low: "#4ade80" };
 
@@ -45,6 +46,7 @@ export default function Solve() {
 
   return (
     <div className="page-wrap" style={{ maxWidth: 880 }}>
+      <HomeButton />
       <div className="page-title">Verified Reports</div>
       <p className="subtitle">{reports.length} record{reports.length !== 1 ? "s" : ""} awaiting resolution</p>
 

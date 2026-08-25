@@ -243,3 +243,74 @@
   font-weight: 800;
   letter-spacing: 1px;
 }
+
+
+
+.lp-footer {
+  padding: 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.lp-footer-brand {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--lp-text-dim);
+}
+.lp-footer-names {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--lp-text-body);
+}
+.lp-footer-sep {
+  color: var(--lp-teal);
+  opacity: 0.6;
+}
+.lp-footer-tag {
+  font-size: 11px;
+  color: var(--lp-text-dim);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+@media (max-width: 700px) {
+  .lp-footer { padding: 20px; }
+  .lp-footer-names { flex-direction: column; gap: 3px; }
+  .lp-footer-sep { display: none; }
+}
+
+
+
+
+
+.lp a, .lp button, .lp .lp-role-card, .lp .lp-nav-cta, .lp .lp-nav-login, .lp .lp-btn-primary, .lp .lp-btn-secondary {
+  text-decoration: none !important;
+}
+.lp a:hover, .lp a:focus, .lp a:active {
+  text-decoration: none !important;
+}
+
+.lp-btn-primary,
+.lp-btn-secondary,
+.lp-role-card,
+.lp-nav-cta,
+.lp-nav-login {
+  transition: transform 0.12s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.lp-btn-primary:active,
+.lp-btn-secondary:active,
+.lp-nav-cta:active {
+  transform: scale(0.97);
+}
+.lp-role-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+
+
+
+

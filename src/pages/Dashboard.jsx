@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import { useAuth } from "../context/AuthContext";
 import BottomNav from "../components/BottomNav";
 import PixelFooter from "../components/PixelFooter";
+import HomeButton from "../components/HomeButton";
 
 const statusMeta = {
   pending: { label: "Awaiting review", color: "#CC8400" },
@@ -24,6 +25,7 @@ export default function Dashboard() {
 
   return (
     <div className="page-wrap">
+      <HomeButton />
       <div className="page-title">Hi, {profile?.name || "there"}</div>
       <p className="subtitle">Your reports and their status</p>
 
