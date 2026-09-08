@@ -13,6 +13,7 @@ export default function CitizenSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
@@ -25,6 +26,10 @@ export default function CitizenSignup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (honeypot) {
+      // Filled by a bot — silently drop, no error shown so bots think it worked
+      return;
+    }
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", cred.user.uid), { name, email, role: "citizen" });
@@ -55,6 +60,16 @@ export default function CitizenSignup() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="At least 6 characters"
           autoComplete="new-password"
+        />
+        <input
+          type="text"
+          name="website"
+          autoComplete="off"
+          tabIndex="-1"
+          aria-hidden="true"
+          style={{ position: "absolute", left: "-9999px", top: "-9999px" }}
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
         />
         <button className="btn btn-primary" type="submit">Sign Up</button>
       </form>

@@ -20,9 +20,21 @@ import Profile from "./pages/Profile";
 import Statistics from "./pages/Statistics";
 import AuthAction from "./pages/AuthAction";
 import VerifyEmailGate from "./pages/VerifyEmailGate";
+import ChatWidget from "./components/ChatWidget";
+
+import SupportForm from "./pages/SupportForm";
+import SupportTickets from "./pages/SupportTickets";
+
+import { LanguageProvider } from "./context/LanguageContext";
+import CookieBanner from "./components/CookieBanner";
+
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
+    <LanguageProvider>
     <ToastProvider>
       <AuthProvider>
         <BrowserRouter>
@@ -38,6 +50,13 @@ export default function App() {
             <Route path="/auth-action" element={<AuthAction />} />
             <Route path="/verify-email" element={<VerifyEmailGate />} />
 
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="*" element={<NotFound />} />
+
+            <Route path="/support" element={<RoleRoute allowed={["citizen", "industrial", "academia"]}><SupportForm /></RoleRoute>} />
+            <Route path="/tickets" element={<RoleRoute allowed={["government"]}><SupportTickets /></RoleRoute>} />
+
             <Route path="/dashboard" element={<RoleRoute allowed={["citizen"]}><Dashboard /></RoleRoute>} />
             <Route path="/submit" element={<RoleRoute allowed={["citizen"]}><Submit /></RoleRoute>} />
             <Route path="/verify" element={<RoleRoute allowed={["industrial"]}><Verify /></RoleRoute>} />
@@ -47,8 +66,11 @@ export default function App() {
             <Route path="/notifications" element={<RoleRoute allowed={["citizen", "industrial", "academia"]}><Notifications /></RoleRoute>} />
             <Route path="/profile" element={<RoleRoute allowed={["citizen", "industrial", "academia", "government"]}><Profile /></RoleRoute>} />
           </Routes>
+          <ChatWidget />
+          <CookieBanner />
         </BrowserRouter>
       </AuthProvider>
     </ToastProvider>
+    </LanguageProvider>
   );
 }
