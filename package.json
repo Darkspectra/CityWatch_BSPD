@@ -10,12 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cobe": "^2.0.1",
     "firebase": "^12.17.1",
     "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-globe.gl": "^2.38.0",
     "react-router-dom": "^7.18.2",
-    "recharts": "^3.10.1"
+    "recharts": "^3.10.1",
+    "three": "^0.186.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

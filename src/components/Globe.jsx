@@ -1,160 +1,139 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import createGlobe from "cobe";
 
-const CONTINENT_POINTS = [
-  [40, -100], [45, -110], [50, -95], [35, -105], [30, -90], [45, -75], [55, -100], [25, -100], [48, -122], [38, -95],
-  [42, -85], [33, -85], [40, -80], [50, -110], [55, -75], [60, -100], [35, -115], [45, -95], [28, -95], [50, -85],
-  [-10, -60], [-20, -60], [-5, -55], [-15, -70], [-25, -55], [-30, -65], [0, -65], [-35, -65], [-10, -75], [-20, -45],
-  [50, 10], [55, 15], [45, 5], [52, 20], [48, 25], [58, 12], [40, 15], [45, 25], [55, 30], [50, -5],
-  [10, 20], [0, 25], [-10, 25], [20, 10], [-20, 25], [5, 15], [-25, 30], [15, 30], [-5, 35], [25, 30],
-  [0, 40], [-30, 22], [10, 40], [-15, 15],
-  [50, 90], [40, 100], [30, 110], [55, 60], [45, 80], [35, 75], [25, 90], [20, 100], [60, 100], [35, 120],
-  [50, 120], [30, 70], [40, 60], [45, 140], [25, 55], [10, 78],
-  [-25, 135], [-30, 145], [-20, 130], [-35, 145], [-22, 150], [-28, 120],
-];
-
-function latLngToVec3(lat, lng, rotation) {
-  const latRad = (lat * Math.PI) / 180;
-  const lngRad = ((lng + rotation) * Math.PI) / 180;
-  return {
-    x: Math.cos(latRad) * Math.sin(lngRad),
-    y: Math.sin(latRad),
-    z: Math.cos(latRad) * Math.cos(lngRad),
-  };
-}
-
-function slerp(a, b, t) {
-  const dot = Math.max(-1, Math.min(1, a.x * b.x + a.y * b.y + a.z * b.z));
-  const theta = Math.acos(dot) * t;
-  const relX = b.x - a.x * dot, relY = b.y - a.y * dot, relZ = b.z - a.z * dot;
-  const relLen = Math.sqrt(relX * relX + relY * relY + relZ * relZ) || 1;
-  const rx = relX / relLen, ry = relY / relLen, rz = relZ / relLen;
-  return {
-    x: a.x * Math.cos(theta) + rx * Math.sin(theta),
-    y: a.y * Math.cos(theta) + ry * Math.sin(theta),
-    z: a.z * Math.cos(theta) + rz * Math.sin(theta),
-  };
-}
-
-export default function Globe({ size = 420 }) {
+// A drag-to-spin dot globe (cobe: https://github.com/shuding/cobe).
+//
+// IMPORTANT: the installed cobe@2.0.1 build exposes only `update(state)` /
+// `destroy()` — there is no built-in `onRender` animation loop (that's a
+// convenience some wrapper components add on top, not part of this
+// version's actual API). Passing `onRender` as an option is silently
+// ignored, the globe draws exactly one static frame at creation time, and
+// never rotates again — which is exactly why it looked frozen/inert. The
+// fix is to drive our own requestAnimationFrame loop and call
+// globe.update({...}) every frame ourselves.
+//
+// `size` is a max-width in px — the globe itself is fully responsive and
+// fills its container up to that cap.
+export default function Globe({ size = 480 }) {
+  const wrapRef = useRef(null);
   const canvasRef = useRef(null);
+  const pointerInteracting = useRef(null);
+  const pointerInteractionMovement = useRef(0);
+  const rotationRef = useRef(0);
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    canvas.width = size;
-    canvas.height = size;
-    const cx = size / 2, cy = size / 2;
-    const radius = size * 0.4;
-
-    // Precompute connection pairs (nearby points on the raw lat/lng grid)
-    const raw = CONTINENT_POINTS.map(([lat, lng]) => ({ lat, lng, v: latLngToVec3(lat, lng, 0) }));
-    const pairs = [];
-    for (let i = 0; i < raw.length; i++) {
-      for (let j = i + 1; j < raw.length; j++) {
-        const dx = raw[i].lat - raw[j].lat;
-        const dy = raw[i].lng - raw[j].lng;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 14) pairs.push([i, j]);
-      }
-    }
-
-    let rotation = 0;
-    let animationId;
-
-    const drawGrid = (rot) => {
-      ctx.strokeStyle = "rgba(0, 0, 0, 0.12)";
-      ctx.lineWidth = 0.7;
-      for (let lat = -60; lat <= 60; lat += 30) {
-        ctx.beginPath();
-        let started = false;
-        for (let lng = -180; lng <= 180; lng += 4) {
-          const v = latLngToVec3(lat, lng, rot);
-          if (v.z > -0.15) {
-            const sx = cx + v.x * radius, sy = cy - v.y * radius;
-            if (!started) { ctx.moveTo(sx, sy); started = true; } else ctx.lineTo(sx, sy);
-          } else started = false;
-        }
-        ctx.stroke();
-      }
-      for (let lng = -180; lng < 180; lng += 30) {
-        ctx.beginPath();
-        let started = false;
-        for (let lat = -90; lat <= 90; lat += 4) {
-          const v = latLngToVec3(lat, lng, rot);
-          if (v.z > -0.15) {
-            const sx = cx + v.x * radius, sy = cy - v.y * radius;
-            if (!started) { ctx.moveTo(sx, sy); started = true; } else ctx.lineTo(sx, sy);
-          } else started = false;
-        }
-        ctx.stroke();
-      }
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, size, size);
-
-      // White sphere fill
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      const grad = ctx.createRadialGradient(cx - radius * 0.3, cy - radius * 0.3, radius * 0.1, cx, cy, radius);
-      grad.addColorStop(0, "#ffffff");
-      grad.addColorStop(1, "#e9f4f0");
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      drawGrid(rotation);
-
-      // Curved surface-hugging connection arcs
-      ctx.strokeStyle = "rgba(0, 0, 0, 0.55)";
-      ctx.lineWidth = 1;
-      pairs.forEach(([i, j]) => {
-        const a = latLngToVec3(raw[i].lat, raw[i].lng, rotation);
-        const b = latLngToVec3(raw[j].lat, raw[j].lng, rotation);
-        if (a.z < -0.1 && b.z < -0.1) return;
-
-        ctx.beginPath();
-        let started = false;
-        const steps = 14;
-        for (let s = 0; s <= steps; s++) {
-          const t = s / steps;
-          const v = slerp(a, b, t);
-          if (v.z > -0.1) {
-            const sx = cx + v.x * radius, sy = cy - v.y * radius;
-            if (!started) { ctx.moveTo(sx, sy); started = true; } else ctx.lineTo(sx, sy);
-          } else started = false;
-        }
-        ctx.stroke();
-      });
-
-      // Dots
-      raw.forEach((p) => {
-        const v = latLngToVec3(p.lat, p.lng, rotation);
-        if (v.z < -0.1) return;
-        const sx = cx + v.x * radius, sy = cy - v.y * radius;
-        ctx.beginPath();
-        ctx.arc(sx, sy, 3, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-        ctx.fill();
-      });
-
-      // Outer ring
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      rotation += 0.15;
-      animationId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => cancelAnimationFrame(animationId);
+    if (!wrapRef.current) return undefined;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect?.width;
+      if (w) setWidth(w);
+    });
+    ro.observe(wrapRef.current);
+    return () => ro.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!width || !canvasRef.current) return undefined;
+
+    let phi = 0;
+    let rafId = null;
+    let destroyed = false;
+
+    const globe = createGlobe(canvasRef.current, {
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      width: width * 2,
+      height: width * 2,
+      phi: 0,
+      theta: 0.3,
+      dark: 1,
+      diffuse: 1.2,
+      mapSamples: 16000,
+      mapBrightness: 6,
+      baseColor: [0.38, 0.46, 0.42],
+      markerColor: [0.96, 0.75, 0.29],
+      glowColor: [0.13, 0.55, 0.45],
+      markers: [
+        { location: [23.8103, 90.4125], size: 0.09 }, // Dhaka
+        { location: [51.5072, -0.1276], size: 0.05 }, // London
+        { location: [35.6762, 139.6503], size: 0.05 }, // Tokyo
+        { location: [-33.8688, 151.2093], size: 0.05 }, // Sydney
+        { location: [40.7128, -74.006], size: 0.05 }, // New York
+        { location: [1.3521, 103.8198], size: 0.05 }, // Singapore
+      ],
+    });
+
+    const frame = () => {
+      if (destroyed) return;
+      if (!pointerInteracting.current) {
+        phi += 0.0045;
+      }
+      globe.update({
+        phi: phi + rotationRef.current,
+        width: width * 2,
+        height: width * 2,
+      });
+      rafId = requestAnimationFrame(frame);
+    };
+    rafId = requestAnimationFrame(frame);
+
+    requestAnimationFrame(() => {
+      if (canvasRef.current) canvasRef.current.style.opacity = "1";
+    });
+
+    return () => {
+      destroyed = true;
+      if (rafId) cancelAnimationFrame(rafId);
+      globe.destroy();
+    };
+  }, [width]);
+
+  const releaseCapture = (e) => {
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      // no-op — pointer was never captured
+    }
+  };
+
   return (
-    <div className="globe-wrap">
-      <canvas ref={canvasRef} className="globe-canvas" />
+    <div
+      ref={wrapRef}
+      className="globe-wrap"
+      style={{ width: "100%", maxWidth: size, aspectRatio: "1", margin: "0 auto", position: "relative" }}
+    >
+      <canvas
+        ref={canvasRef}
+        onPointerDown={(e) => {
+          pointerInteracting.current = e.clientX - pointerInteractionMovement.current;
+          e.currentTarget.style.cursor = "grabbing";
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }}
+        onPointerUp={(e) => {
+          pointerInteracting.current = null;
+          e.currentTarget.style.cursor = "grab";
+          releaseCapture(e);
+        }}
+        onPointerCancel={(e) => {
+          pointerInteracting.current = null;
+          e.currentTarget.style.cursor = "grab";
+          releaseCapture(e);
+        }}
+        onPointerMove={(e) => {
+          if (pointerInteracting.current === null) return;
+          const delta = e.clientX - pointerInteracting.current;
+          pointerInteractionMovement.current = delta;
+          rotationRef.current = delta / 200;
+        }}
+        style={{
+          width: "100%",
+          height: "100%",
+          cursor: "grab",
+          contain: "layout paint size",
+          opacity: 0,
+          transition: "opacity 1s ease",
+          touchAction: "none",
+        }}
+      />
     </div>
   );
 }

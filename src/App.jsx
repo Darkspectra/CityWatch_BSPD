@@ -18,8 +18,13 @@ import GovDashboard from "./pages/GovDashboard";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Statistics from "./pages/Statistics";
+import LiveMap from "./pages/LiveMap";
 import AuthAction from "./pages/AuthAction";
 import VerifyEmailGate from "./pages/VerifyEmailGate";
+import ChatWidget from "./components/ChatWidget";
+
+import SupportForm from "./pages/SupportForm";
+import SupportTickets from "./pages/SupportTickets";
 
 export default function App() {
   return (
@@ -38,15 +43,20 @@ export default function App() {
             <Route path="/auth-action" element={<AuthAction />} />
             <Route path="/verify-email" element={<VerifyEmailGate />} />
 
+            <Route path="/support" element={<RoleRoute allowed={["citizen", "industrial", "academia"]}><SupportForm /></RoleRoute>} />
+            <Route path="/tickets" element={<RoleRoute allowed={["government"]}><SupportTickets /></RoleRoute>} />
+
             <Route path="/dashboard" element={<RoleRoute allowed={["citizen"]}><Dashboard /></RoleRoute>} />
             <Route path="/submit" element={<RoleRoute allowed={["citizen"]}><Submit /></RoleRoute>} />
             <Route path="/verify" element={<RoleRoute allowed={["industrial"]}><Verify /></RoleRoute>} />
             <Route path="/solve" element={<RoleRoute allowed={["academia"]}><Solve /></RoleRoute>} />
             <Route path="/statistics" element={<RoleRoute allowed={["academia"]}><Statistics /></RoleRoute>} />
+            <Route path="/map" element={<RoleRoute allowed={["citizen", "industrial", "academia", "government"]}><LiveMap /></RoleRoute>} />
             <Route path="/gov" element={<RoleRoute allowed={["government"]}><GovDashboard /></RoleRoute>} />
             <Route path="/notifications" element={<RoleRoute allowed={["citizen", "industrial", "academia"]}><Notifications /></RoleRoute>} />
             <Route path="/profile" element={<RoleRoute allowed={["citizen", "industrial", "academia", "government"]}><Profile /></RoleRoute>} />
           </Routes>
+          <ChatWidget />
         </BrowserRouter>
       </AuthProvider>
     </ToastProvider>
