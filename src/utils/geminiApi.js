@@ -1,4 +1,4 @@
-const API_KEY = "AQ.Ab8RN6JMmXSTquS_5hpNvdlUoWgknXfMwqRZgjnYHzzAUZk1DA";
+
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent`;
 
 const SYSTEM_CONTEXT = `You are the CityWatch Assistant, a helpful guide embedded in the CityWatch app.

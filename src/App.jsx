@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ToastProvider } from "./context/ToastContext";
 import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
 import RoleRoute from "./components/RoleRoute";
 import LandingPage from "./pages/LandingPage";
 import Landing from "./pages/Landing";
@@ -22,16 +23,24 @@ import LiveMap from "./pages/LiveMap";
 import AuthAction from "./pages/AuthAction";
 import VerifyEmailGate from "./pages/VerifyEmailGate";
 import ChatWidget from "./components/ChatWidget";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import NotFound from "./pages/NotFound";
 
 import SupportForm from "./pages/SupportForm";
 import SupportTickets from "./pages/SupportTickets";
 
+import CookieBanner from "./components/CookieBanner";
+
 export default function App() {
   return (
+    <LanguageProvider>
     <ToastProvider>
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/start" element={<Landing />} />
             <Route path="/citizen/login" element={<CitizenLogin />} />
@@ -55,10 +64,13 @@ export default function App() {
             <Route path="/gov" element={<RoleRoute allowed={["government"]}><GovDashboard /></RoleRoute>} />
             <Route path="/notifications" element={<RoleRoute allowed={["citizen", "industrial", "academia"]}><Notifications /></RoleRoute>} />
             <Route path="/profile" element={<RoleRoute allowed={["citizen", "industrial", "academia", "government"]}><Profile /></RoleRoute>} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           <ChatWidget />
+          <CookieBanner />
         </BrowserRouter>
       </AuthProvider>
     </ToastProvider>
+    </LanguageProvider>
   );
 }

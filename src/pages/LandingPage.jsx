@@ -3,6 +3,7 @@ import "./LandingPage.css";
 import ParticleNetwork from "../components/ParticleNetwork";
 import Globe from "../components/Globe";
 import GlobalContextPanel from "../components/GlobalContextPanel";
+import { useLanguage } from "../context/LanguageContext";
 import bspdLogo from "../assets/bspd-favicon.png";
 import bspdBadge from "../assets/bspd-badge.png";
 import androidQr from "../assets/android-qr.png";
@@ -17,7 +18,7 @@ const mockReports = [
 ];
 
 export default function LandingPage() {
-
+  const { lang, toggleLang, t } = useLanguage();
 
   function handleMockupTilt(e) {
   const card = e.currentTarget;
@@ -49,6 +50,9 @@ function resetMockupTilt(e) {
         <a href="#about" className="lp-nav-hide-mobile">About Us</a>
         <a href="#resilient-city" className="lp-nav-hide-mobile">A Resilient City</a>
         <Link to="/start" className="lp-nav-login">Log In</Link>
+        <button className="lang-toggle-btn" onClick={toggleLang} aria-label="Toggle language">
+          {lang === "en" ? "日本語" : "English"}
+        </button>
         <img src={bspdBadge} alt="BSPD" className="lp-nav-badge-img" />
       </div>
       </nav>
@@ -58,18 +62,15 @@ function resetMockupTilt(e) {
         <div className="lp-panel-particles"><ParticleNetwork /></div>
         <div className="lp-hero-inner">
         <div className="lp-hero-text">
-          <h1>City-Scale Environmental Intelligence</h1>
-            <p>
-              CityWatch connects citizens, industry reviewers, and government agencies
-              on a single platform to report, verify, and resolve environmental hazards
-              — with full transparency and a resilient-city framework built in.
+          <h1>{t("heroTitle")}</h1>
+            <p>{t("heroBody")}
             </p>
             <div className="lp-hero-actions">
               <Link to="/start" className="lp-btn-primary">
-                Get Started
+                {t("getStarted")}
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </Link>
-              <a href="#how-it-works" className="lp-btn-secondary">See How It Works</a>
+              <a href="#how-it-works" className="lp-btn-secondary">{t("seeHowItWorks")}</a>
             </div>
           </div>
 
@@ -103,32 +104,32 @@ function resetMockupTilt(e) {
         </div>
 
         <div className="lp-scroll-hint">
-          <span>Scroll to explore</span>
+          <span>{t("scrollToExplore")}</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
         </div>
       </section>
 
       {/* ── Role Cards ── */}
       <section className="lp-roles" id="roles">
-        <h2>Choose Your Role</h2>
+        <h2>{t("chooseYourRole")}</h2>
         <div className="lp-roles-grid">
           <Link to="/citizen/signup" className="lp-role-card">
             <span className="lp-role-icon">🏠</span>
-            <h3>Citizens</h3>
-            <p>Report environmental issues in your neighborhood — chemical spills, air quality, water contamination.</p>
-            <span className="lp-role-cta">Report an Issue →</span>
+            <h3>{t("roleCitizenTitle")}</h3>
+            <p>{t("roleCitizenDesc")}</p>
+            <span className="lp-role-cta">{t("roleCitizenCta")} →</span>
           </Link>
           <Link to="/partner/signup" className="lp-role-card">
             <span className="lp-role-icon">🏭</span>
-            <h3>Industry & Reviewers</h3>
-            <p>Verify citizen reports, run sensor diagnostics, and triage incidents by risk level.</p>
-            <span className="lp-role-cta">Start Verifying →</span>
+            <h3>{t("roleIndustryTitle")}</h3>
+            <p>{t("roleIndustryDesc")}</p>
+            <span className="lp-role-cta">{t("roleIndustryCta")} →</span>
           </Link>
           <Link to="/gov/login" className="lp-role-card">
             <span className="lp-role-icon">🏛️</span>
-            <h3>Government Partners</h3>
-            <p>Publish official resolutions, track city-wide trends, and close the loop with the public.</p>
-            <span className="lp-role-cta">Sign In as Partner →</span>
+            <h3>{t("roleGovTitle")}</h3>
+            <p>{t("roleGovDesc")}</p>
+            <span className="lp-role-cta">{t("roleGovCta")} →</span>
           </Link>
         </div>
       </section>
@@ -138,28 +139,28 @@ function resetMockupTilt(e) {
       {/* ── How It Works ── */}
       <section className="lp-how" id="how-it-works">
         <div className="lp-how-inner">
-          <p className="lp-section-label">Process</p>
-          <h2 className="lp-section-title">How It Works</h2>
+          <p className="lp-section-label">{t("processLabel")}</p>
+          <h2 className="lp-section-title">{t("howItWorksTitle")}</h2>
           <div className="lp-steps">
             <div className="lp-step">
               <span className="lp-step-num">1</span>
-              <h3>Report</h3>
-              <p>Citizens submit environmental reports with descriptions, locations, and optional sensor flags.</p>
+              <h3>{t("step1Title")}</h3>
+              <p>{t("step1Desc")}</p>
             </div>
             <div className="lp-step">
               <span className="lp-step-num">2</span>
-              <h3>Verify</h3>
-              <p>Industry reviewers and academia triage reports, confirm sensor data, and assess risk levels.</p>
+              <h3>{t("step2Title")}</h3>
+              <p>{t("step2Desc")}</p>
             </div>
             <div className="lp-step">
               <span className="lp-step-num">3</span>
-              <h3>Resolve</h3>
-              <p>Academia tracks the verified issue until it's fixed, then flags it as solved.</p>
+              <h3>{t("step3Title")}</h3>
+              <p>{t("step3Desc")}</p>
             </div>
             <div className="lp-step">
               <span className="lp-step-num">4</span>
-              <h3>Announce</h3>
-              <p>Government publishes one clear, trusted notice the whole city can see.</p>
+              <h3>{t("step4Title")}</h3>
+              <p>{t("step4Desc")}</p>
             </div>
           </div>
         </div>
@@ -169,33 +170,27 @@ function resetMockupTilt(e) {
       <section className="lp-section" id="about">
         <div className="lp-about-grid">
           <div>
-            <p className="lp-section-label">About Us</p>
-            <h2 className="lp-section-title">Building Safer Cities Together</h2>
-            <p className="lp-section-body">
-              CityWatch is a collaborative platform built on the Quadruple Helix
-              model — connecting citizens, industry, government, and academia to
-              create a transparent, data-driven approach to urban environmental
-              safety. Every report is logged on an immutable ledger, every risk
-              level is assessed with sensor-backed data, and every resolution is
-              published for public accountability.
+            <p className="lp-section-label">	{t("aboutLabel")}</p>
+            <h2 className="lp-section-title">{t("aboutTitle")}</h2>
+            <p className="lp-section-body">{t("aboutBody")}
             </p>
           </div>
           <div className="lp-about-visual">
             <div className="lp-about-stat">
               <span className="lp-about-stat-icon">📡</span>
-              <span>Sensor-Backed Reports</span>
+              <span>{t("statSensor")}</span>
             </div>
             <div className="lp-about-stat">
               <span className="lp-about-stat-icon">🔒</span>
-              <span>Immutable Ledger</span>
+              <span>{t("statLedger")}</span>
             </div>
             <div className="lp-about-stat">
               <span className="lp-about-stat-icon">🌐</span>
-              <span>Quadruple Helix Model</span>
+              <span>{t("statHelix")}</span>
             </div>
             <div className="lp-about-stat">
               <span className="lp-about-stat-icon">⚡</span>
-              <span>Real-Time Risk Alerts</span>
+              <span>{t("statAlerts")}</span>
             </div>
           </div>
         </div>
@@ -207,12 +202,9 @@ function resetMockupTilt(e) {
         <div className="lp-resilient-inner">
           <div className="lp-resilient-top">
             <div>
-              <p className="lp-section-label">Resilience Framework</p>
-              <h2 className="lp-section-title">A Resilient City, Modeled</h2>
-              <p className="lp-section-body">
-                Our platform models urban resilience across environmental, social, and
-                infrastructural dimensions — turning reactive crisis management into
-                proactive city planning.
+              <p className="lp-section-label">{t("resilienceLabel")}</p>
+              <h2 className="lp-section-title">{t("resilientTitle")}</h2>
+              <p className="lp-section-body">{t("resilientBody")}
               </p>
             </div>
             <div className="lp-resilient-globe">
@@ -221,20 +213,20 @@ function resetMockupTilt(e) {
           </div>
           <div className="lp-resilient-grid">
             <div className="lp-resilient-card">
-              <h3>Environmental Monitoring</h3>
-              <p>Track air, water, chemical, and waste indicators across city sectors with citizen and sensor data fusion.</p>
+              <h3>{t("resCard1Title")}</h3>
+              <p>{t("resCard1Desc")}</p>
             </div>
             <div className="lp-resilient-card">
-              <h3>Risk Classification</h3>
-              <p>Automated risk scoring (high / low / pending) routes reports to the right stakeholders instantly.</p>
+              <h3>{t("resCard2Title")}</h3>
+              <p>{t("resCard2Desc")}</p>
             </div>
             <div className="lp-resilient-card">
-              <h3>Multi-Stakeholder Response</h3>
-              <p>Government, industry, and academia coordinate through a shared ledger — no more siloed crisis response.</p>
+              <h3>{t("resCard3Title")}</h3>
+              <p>{t("resCard3Desc")}</p>
             </div>
             <div className="lp-resilient-card">
-              <h3>Public Transparency</h3>
-              <p>Every report, triage action, and resolution is visible on the public ledger for full accountability.</p>
+              <h3>{t("resCard4Title")}</h3>
+              <p>{t("resCard4Desc")}</p>
             </div>
           </div>
           <GlobalContextPanel />
@@ -284,6 +276,11 @@ function resetMockupTilt(e) {
           <span>Patricia Aira Dy Herrera</span>
           <span className="lp-footer-sep">|</span>
           <span>Farhan Tanvir Ahmed</span>
+        </div>
+        <div className="lp-footer-legal-links">
+          <Link to="/privacy">{t("Privacy")}</Link>
+          <span className="lp-footer-sep">|</span>
+          <Link to="/terms">{t("Terms")}</Link>
         </div>
         <span className="lp-footer-tag">EBA Minamata — 2026</span>
       </footer>
