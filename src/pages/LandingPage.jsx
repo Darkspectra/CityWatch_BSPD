@@ -8,7 +8,7 @@ import bspdLogo from "../assets/bspd-favicon.png";
 import bspdBadge from "../assets/bspd-badge.png";
 import androidQr from "../assets/android-qr.png";
 
-const ANDROID_APK_URL = "https://drive.google.com/file/d/11x1HNVueosGNIvL5DHIqvdx3lfZjOiJi/view?usp=sharing";
+const ANDROID_APK_URL = "https://drive.google.com/file/d/189Xk7WtC89MgmZnCe_3yyYpLKj9LjKul/view?usp=sharing";
 
 const mockReports = [
   { cat: "Chemical Spill", loc: "Sector 4 — Riverside", status: "submitted", statusColor: "#B33B24", risk: "high", riskColor: "#22d3c9" },
